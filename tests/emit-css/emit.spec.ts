@@ -24,6 +24,39 @@ describe('emit-css: general', () => {
 
             expect(output).to.eql(`.entry--root .entry--b { color:green; }`);
         });
+        it.only('should inline mixins', () => {
+            const output = generateStylableOutput({
+                entry: '/entry.st.css',
+                usedFiles: [
+                    '/entry.st.css'
+                ],
+                files: {
+                    "/mixin.js": {
+                        namespace: 'entry',
+                        content: `
+                            module.exports = function(cols,rows){
+                                return {
+                                    gridTemplateCols:cols,
+                                    gridTemplateRows:rows
+                                }
+                            }
+                        `
+                    },
+                    "/entry.st.css": {
+                        namespace: 'entry',
+                        content: `
+                            :import{
+                                -st-from:'./mixin.js';
+                                -st-default:mixin;
+                            }
+                            .b { -st-mixin:mixin(auto, 1fr); } 
+                        `
+                    }
+                }
+            });
+
+            expect(output).to.eql(`.entry--root .entry--b { grid-template-cols: auto; grid-template-rows: 1fr; }`);
+        });
 
         it('should output multiple files', () => {
             const output = generateStylableOutput({
