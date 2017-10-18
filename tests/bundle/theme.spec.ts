@@ -597,7 +597,7 @@ describe('bundle: theme', () => {
                                 -st-named: color1;
                                 color1: gold;
                             }
-                            .a { color:value(color1); } 
+                            .root .a { color:value(color1); } 
                         `
                     },
                     "/theme.st.css": {
@@ -607,13 +607,16 @@ describe('bundle: theme', () => {
                                 color1:red;
                             }
                             .b { color:value(color1); }
+                            .b:hover {
+                                color: green;
+                            }
                         `
                     }
                 }
             });
     
             expect(cssOutput).to.eql([
-                '.theme--root .theme--b { color:red; }',
+                '.theme--b { color:red; }',
                 '.entry--root .theme--b { color:gold; }',
     
                 '.entry--root .entry--a { color:red; }',

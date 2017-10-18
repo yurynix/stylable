@@ -198,7 +198,8 @@ export class Bundler {
                     overrideSelector = overrideSelector.replace(new RegExp(outputRootSelector), rootSelector); // scope override
                     overrideSelector = (overrideSelector === srcRule.selector) ? '.' + rootSelector + ' ' + overrideSelector : overrideSelector; // scope globals
                 } else {
-                    const isNestedSep = outputRootSelector !== rootSelector ? ' ' : '';
+                    debugger;
+                    const isNestedSep = overrideSelector.startsWith('.' + rootSelector) ? '' : ' '; //  outputRootSelector !== rootSelector
                     overrideSelector = '.' + rootSelector + isNestedSep + overrideSelector; // none theme selector
                 }
                 let ruleOverride = postcss.rule({ selector: overrideSelector });

@@ -29,7 +29,7 @@ describe('Stylable postcss transform (Scoping)', function () {
                 }
             });
 
-            expect((<postcss.Rule>result.nodes![0]).selector).to.equal('.ns--root .ns1--root');
+            expect((<postcss.Rule>result.nodes![0]).selector).to.equal('.ns1--root');
             expect((<postcss.Rule>result.nodes![1]).selector).to.equal('.ns--root .ns1--root');
 
         });
@@ -58,7 +58,7 @@ describe('Stylable postcss transform (Scoping)', function () {
                 }
             });
 
-            expect((<postcss.Rule>result.nodes![0]).selector).to.equal('.entry--root .inner--root .inner--part');
+            expect((<postcss.Rule>result.nodes![0]).selector).to.equal('.inner--root .inner--part');
 
         });
 
@@ -103,8 +103,8 @@ describe('Stylable postcss transform (Scoping)', function () {
                 }
             });
 
-            expect((<postcss.Rule>result.nodes![0]).selector).to.equal('.ns--root .ns1--root .ns1--inner');
-            expect((<postcss.Rule>result.nodes![1]).selector).to.equal('.ns--root .ns1--root .ns1--inner .ns2--deep');
+            expect((<postcss.Rule>result.nodes![0]).selector).to.equal('.ns1--root .ns1--inner');
+            expect((<postcss.Rule>result.nodes![1]).selector).to.equal('.ns1--root .ns1--inner .ns2--deep');
         });
 
         it('component/tag selector with custom states', () => {
@@ -134,7 +134,7 @@ describe('Stylable postcss transform (Scoping)', function () {
                 }
             });
 
-            expect((<postcss.Rule>result.nodes![0]).selector).to.equal('.ns--root .ns1--root[data-ns1-state]');
+            expect((<postcss.Rule>result.nodes![0]).selector).to.equal('.ns1--root[data-ns1-state]');
             
         });
 
@@ -179,8 +179,8 @@ describe('Stylable postcss transform (Scoping)', function () {
             });
 
 
-            expect((<postcss.Rule>result.nodes![1]).selector).to.equal('.ns--root .ns--app.ns1--root .ns1--inner');
-            expect((<postcss.Rule>result.nodes![2]).selector).to.equal('.ns--root .ns--app.ns1--root .ns1--inner .ns2--deep');
+            expect((<postcss.Rule>result.nodes![1]).selector).to.equal('.ns--app.ns1--root .ns1--inner');
+            expect((<postcss.Rule>result.nodes![2]).selector).to.equal('.ns--app.ns1--root .ns1--inner .ns2--deep');
 
         });
 
@@ -224,7 +224,7 @@ describe('Stylable postcss transform (Scoping)', function () {
             });
 
 
-            expect((<postcss.Rule>result.nodes![1]).selector).to.equal('.ns--root .ns--app.ns1--root .ns2--deep');
+            expect((<postcss.Rule>result.nodes![1]).selector).to.equal('.ns--app.ns1--root .ns2--deep');
 
         });
 
@@ -269,7 +269,7 @@ describe('Stylable postcss transform (Scoping)', function () {
             });
 
 
-            expect((<postcss.Rule>result.nodes![1]).selector).to.equal('.ns--root .ns--app.ns1--root .ns1--deep');
+            expect((<postcss.Rule>result.nodes![1]).selector).to.equal('.ns--app.ns1--root .ns1--deep');
 
         });
 
@@ -300,7 +300,7 @@ describe('Stylable postcss transform (Scoping)', function () {
                 }
             });
 
-            expect((<postcss.Rule>result.nodes![1]).selector).to.equal('.entry--root.inner--root .inner--inner, .entry--root .entry--inner');
+            expect((<postcss.Rule>result.nodes![1]).selector).to.equal('.entry--root.inner--root .inner--inner, .entry--inner');
 
         });
 
@@ -327,7 +327,7 @@ describe('Stylable postcss transform (Scoping)', function () {
                     }
                 }
             });
-            expect((<postcss.Rule>result.nodes![2]).selector).to.equal('.entry--root .entry--container:not([data-entry-state])');
+            expect((<postcss.Rule>result.nodes![2]).selector).to.equal('.entry--container:not([data-entry-state])');
         })
         //TODO: IDO create a bug report.
         // it('should work with nested pseudo selectors under pseudo element', () => {
@@ -388,8 +388,8 @@ describe('Stylable postcss transform (Scoping)', function () {
                     }
                 }
             });
-            expect((<postcss.Rule>result.nodes![0]).selector).to.equal('.ns--root .ns1--root .ns1--item:not([data-ns1-selected])');
-            expect((<postcss.Rule>result.nodes![1]).selector).to.equal('.ns--root .ns1--root .ns1--item[data-ns1-selected]');
+            expect((<postcss.Rule>result.nodes![0]).selector).to.equal('.ns1--root .ns1--item:not([data-ns1-selected])');
+            expect((<postcss.Rule>result.nodes![1]).selector).to.equal('.ns1--root .ns1--item[data-ns1-selected]');
         })
 
         it('resolve extend on extended alias', () => {
@@ -429,7 +429,7 @@ describe('Stylable postcss transform (Scoping)', function () {
                 }
             });
 
-            expect((<postcss.Rule>result.nodes![0]).selector).to.equal('.entry--root .Inner--root .Inner--deep .Deep--up');
+            expect((<postcss.Rule>result.nodes![0]).selector).to.equal('.Inner--root .Inner--deep .Deep--up');
         });
 
     })
@@ -453,9 +453,9 @@ describe('Stylable postcss transform (Scoping)', function () {
                 }
             });
 
-            expect((<postcss.Rule>result.nodes![0]).selector).to.equal('.entry--root .entry--a');
-            expect((<postcss.Rule>result.nodes![1]).selector).to.equal('.entry--root .entry--b, .entry--root .entry--c');
-            expect((<postcss.Rule>result.nodes![2]).selector).to.equal('.entry--root .entry--d .entry--e');
+            expect((<postcss.Rule>result.nodes![0]).selector).to.equal('.entry--a');
+            expect((<postcss.Rule>result.nodes![1]).selector).to.equal('.entry--b, .entry--c');
+            expect((<postcss.Rule>result.nodes![2]).selector).to.equal('.entry--d .entry--e');
 
         });
 
@@ -477,7 +477,7 @@ describe('Stylable postcss transform (Scoping)', function () {
 
             expect((<postcss.Rule>result.nodes![0]).selector).to.equal('.entry--root');
             expect((<postcss.Rule>result.nodes![1]).selector).to.equal('.entry--root .entry--a');
-            expect((<postcss.Rule>result.nodes![2]).selector).to.equal('.entry--root .entry--b, .entry--root .entry--c');
+            expect((<postcss.Rule>result.nodes![2]).selector).to.equal('.entry--root .entry--b, .entry--c');
 
         });
 
@@ -545,7 +545,7 @@ describe('Stylable postcss transform (Scoping)', function () {
                 }
             });
 
-            expect((<postcss.Rule>result.nodes![0]).selector).to.equal('.entry--root .entry--a.imported--root');
+            expect((<postcss.Rule>result.nodes![0]).selector).to.equal('.entry--a.imported--root');
 
         });
 
@@ -579,8 +579,8 @@ describe('Stylable postcss transform (Scoping)', function () {
                 }
             });
 
-            expect((<postcss.Rule>result.nodes![0]).selector, 'root alias').to.equal('.entry--root .imported--root');
-            expect((<postcss.Rule>result.nodes![1]).selector, 'class alias').to.equal('.entry--root .imported--inner-class');
+            expect((<postcss.Rule>result.nodes![0]).selector, 'root alias').to.equal('.imported--root');
+            expect((<postcss.Rule>result.nodes![1]).selector, 'class alias').to.equal('.imported--inner-class');
 
         });
 
@@ -613,7 +613,7 @@ describe('Stylable postcss transform (Scoping)', function () {
                 }
             });
 
-            expect((<postcss.Rule>result.nodes![0]).selector, 'class alias').to.equal('.entry--root .entry--inner-class.imported--inner-class');
+            expect((<postcss.Rule>result.nodes![0]).selector, 'class alias').to.equal('.entry--inner-class.imported--inner-class');
 
         });
 
@@ -636,7 +636,7 @@ describe('Stylable postcss transform (Scoping)', function () {
                 }
             });
 
-            expect((<postcss.Rule>result.nodes![1]).selector).to.equal('.ns--root .ns--b.ns--a');
+            expect((<postcss.Rule>result.nodes![1]).selector).to.equal('.ns--b.ns--a');
 
         });
 
@@ -668,7 +668,7 @@ describe('Stylable postcss transform (Scoping)', function () {
                 }
             });
 
-            expect((<postcss.Rule>result.nodes![0]).selector).to.equal('.ns--root .ns--a.ns1--b');
+            expect((<postcss.Rule>result.nodes![0]).selector).to.equal('.ns--a.ns1--b');
 
         });
 
@@ -697,7 +697,7 @@ describe('Stylable postcss transform (Scoping)', function () {
                 }
             });
 
-            expect((<postcss.Rule>result.nodes![0]).selector).to.equal('.ns--root .ns--b');
+            expect((<postcss.Rule>result.nodes![0]).selector).to.equal('.ns--b');
 
         });
 
@@ -722,7 +722,7 @@ describe('Stylable postcss transform (Scoping)', function () {
                 }
             });
 
-            expect((<postcss.Rule>result.nodes![1]).selector).to.equal('.entry--root .entry--my-class[data-entry-my-state]');
+            expect((<postcss.Rule>result.nodes![1]).selector).to.equal('.entry--my-class[data-entry-my-state]');
 
         });
 
@@ -744,8 +744,8 @@ describe('Stylable postcss transform (Scoping)', function () {
                 }
             });
 
-            expect((<postcss.Rule>result.nodes![1]).selector).to.equal('.entry--root .entry--my-class.x');
-            expect((<postcss.Rule>result.nodes![2]).selector).to.equal('.entry--root .entry--my-class.y[data-z="value"]');
+            expect((<postcss.Rule>result.nodes![1]).selector).to.equal('.entry--my-class.x');
+            expect((<postcss.Rule>result.nodes![2]).selector).to.equal('.entry--my-class.y[data-z="value"]');
 
         });
         
@@ -779,7 +779,7 @@ describe('Stylable postcss transform (Scoping)', function () {
                 }
             });
 
-            expect((<postcss.Rule>result.nodes![1]).selector).to.equal('.entry--root .entry--my-class.inner--root[data-entry-my-state]');
+            expect((<postcss.Rule>result.nodes![1]).selector).to.equal('.entry--my-class.inner--root[data-entry-my-state]');
 
 
         });
@@ -814,7 +814,7 @@ describe('Stylable postcss transform (Scoping)', function () {
                 }
             });
 
-            expect((<postcss.Rule>result.nodes![1]).selector).to.equal('.entry--root .entry--my-class.inner--root[data-inner-my-state]');
+            expect((<postcss.Rule>result.nodes![1]).selector).to.equal('.entry--my-class.inner--root[data-inner-my-state]');
 
 
         });
@@ -860,7 +860,7 @@ describe('Stylable postcss transform (Scoping)', function () {
                 }
             });
 
-            expect((<postcss.Rule>result.nodes![1]).selector).to.equal('.entry--root .entry--my-class.inner--root[data-deep-my-state]');
+            expect((<postcss.Rule>result.nodes![1]).selector).to.equal('.entry--my-class.inner--root[data-deep-my-state]');
 
 
         });
@@ -894,7 +894,7 @@ describe('Stylable postcss transform (Scoping)', function () {
                 }
             });
 
-            expect((<postcss.Rule>result.nodes![1]).selector).to.equal('.entry--root .entry--my-class.inner--root .inner--container[data-inner-my-state]');
+            expect((<postcss.Rule>result.nodes![1]).selector).to.equal('.entry--my-class.inner--root .inner--container[data-inner-my-state]');
 
 
         });
@@ -943,7 +943,7 @@ describe('Stylable postcss transform (Scoping)', function () {
                 }
             });
 
-            expect((<postcss.Rule>result.nodes![1]).selector).to.equal('.entry--root .entry--my-class.inner--root .inner--container[data-deep-my-state]');
+            expect((<postcss.Rule>result.nodes![1]).selector).to.equal('.entry--my-class.inner--root .inner--container[data-deep-my-state]');
 
 
         });
@@ -974,8 +974,8 @@ describe('Stylable postcss transform (Scoping)', function () {
 
             const mediaNode = <postcss.AtRule>result.nodes![0];
 
-            expect((<postcss.Rule>mediaNode.nodes![0]).selector).to.equal('.entry--root .entry--my-class');
-            expect((<postcss.Rule>mediaNode.nodes![1]).selector).to.equal('.entry--root .entry--my-class[data-entry-my-state]');
+            expect((<postcss.Rule>mediaNode.nodes![0]).selector).to.equal('.entry--my-class');
+            expect((<postcss.Rule>mediaNode.nodes![1]).selector).to.equal('.entry--my-class[data-entry-my-state]');
 
         });
 

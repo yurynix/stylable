@@ -101,7 +101,7 @@ describe('@custom-selector', function () {
         });
 
         const r = <postcss.Rule>ast.nodes![0];
-        expect(r.selector).to.equal('.entry--root .comp--root > .comp--icon');
+        expect(r.selector).to.equal('.comp--root > .comp--icon');
         
 
     });
@@ -155,7 +155,7 @@ describe('@custom-selector', function () {
         });
 
         const r = <postcss.Rule>ast.nodes![0];
-        expect(r.selector).to.equal('.entry--root .comp--root > .comp--icon.child--root .child--top');
+        expect(r.selector).to.equal('.comp--root > .comp--icon.child--root .child--top');
         
 
     });
@@ -191,7 +191,7 @@ describe('@custom-selector', function () {
         });
 
         const r = <postcss.Rule>ast.nodes![0];
-        expect(r.selector).to.equal('.entry--root .comp--root .comp--icon,.entry--root .comp--root .comp--class');
+        expect(r.selector).to.equal('.comp--root .comp--icon,.comp--root .comp--class');
         
 
     });

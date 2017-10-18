@@ -1,8 +1,9 @@
 import * as postcss from 'postcss';
 import { SRule, StylableMeta, Imported } from "./stylable-processor";
-import { parseSelector, stringifySelector, traverseNode } from "./selector-utils";
+import { parseSelector, stringifySelector, traverseNode, SelectorAstNode } from "./selector-utils";
 import { valueMapping } from "./stylable-value-parsers";
 import { Diagnostics } from "./diagnostics";
+import { StylableTransformer } from './stylable-transformer';
 const replaceRuleSelector = require("postcss-selector-matches/dist/replaceRuleSelector");
 const cloneDeep = require('lodash.clonedeep');
 
@@ -171,6 +172,27 @@ export function getRuleFromMeta(meta:StylableMeta, selector: string, test:any =(
         }
     })
     return found
+}
+
+export function nonRootNonSpacingSelector(ctx: StylableTransformer, meta: StylableMeta, scopeSelectorNode: SelectorAstNode) {
+    let sliceCount = 0;
+    const t = scopeSelectorNode.nodes[0];
+    if (t && t.type === 'class' && t.name === ctx.scope(meta.root, meta.namespace)) {
+        sliceCount++;
+        const t = scopeSelectorNode.nodes[1];
+        if (t.type === 'spacing') {
+            sliceCount++;
+        }
+    }
+    
+    scopeSelectorNode.nodes = scopeSelectorNode.nodes.slice(sliceCount);
+    if (scopeSelectorNode.before) {
+        scopeSelectorNode.before = scopeSelectorNode.before!.replace(/^\s+/, '');
+    }    
+    if (scopeSelectorNode.nodes[0].before) {
+        scopeSelectorNode.nodes[0].before = scopeSelectorNode.nodes[0].before!.replace(/^\s+/, '');
+    }
+    return scopeSelectorNode
 }
 
 

@@ -8,7 +8,7 @@ import { Pojo } from "./types";
 import { valueReplacer } from "./value-template";
 import { StylableResolver, CSSResolve, JSResolve } from "./postcss-resolver";
 import { cssObjectToAst } from "./parser";
-import { createClassSubsetRoot, mergeRules, getCorrectNodeImport, getRuleFromMeta, reservedKeyFrames } from "./stylable-utils";
+import { createClassSubsetRoot, mergeRules, getCorrectNodeImport, getRuleFromMeta, reservedKeyFrames, nonRootNonSpacingSelector } from "./stylable-utils";
 
 const cloneDeep = require('lodash.clonedeep');
 const valueParser = require("postcss-value-parser");
@@ -80,13 +80,6 @@ export class StylableTransformer {
         this.exportLocalVars(meta, metaExports);
         this.exportKeyframes(keyframeMapping, metaExports);
 
-        //applyMixins() DONE!
-        //applyVariants()
-        //applyVars() DONE!
-        //scopeSelectors() DONE!
-        //scopeKeyframes() DONE!
-        //handleAtMediaValue() DONE!
-        //createExports() DONE!
         return {
             meta,
             exports: metaExports
@@ -388,24 +381,24 @@ export class StylableTransformer {
 
 
 
-        const scopedRoot = this.scope(meta.root, meta.namespace);
-        selectorAst.nodes.forEach((selector) => {
-            const first = selector.nodes[0];
-            if (first && first.type === 'selector' && first.name === 'global') {
-                return;
-            }
-            if (first && first.before && first.before === '.' + scopedRoot) {
-                return;
-            }
+        // const scopedRoot = this.scope(meta.root, meta.namespace);
+        // selectorAst.nodes.forEach((selector) => {
+        //     const first = selector.nodes[0];
+        //     if (first && first.type === 'selector' && first.name === 'global') {
+        //         return;
+        //     }
+        //     if (first && first.before && first.before === '.' + scopedRoot) {
+        //         return;
+        //     }
 
-            if (!first || (first.name !== scopedRoot)) {
-                selector.nodes = [{
-                    type: 'class', name: scopedRoot, nodes: []
-                }, {
-                    type: 'spacing', value: " ", name: '', nodes: []
-                }, ...selector.nodes];
-            }
-        });
+        //     if (!first || (first.name !== scopedRoot)) {
+        //         selector.nodes = [{
+        //             type: 'class', name: scopedRoot, nodes: []
+        //         }, {
+        //             type: 'spacing', value: " ", name: '', nodes: []
+        //         }, ...selector.nodes];
+        //     }
+        // });
 
         return {
             current,
@@ -603,27 +596,3 @@ export class StylableTransformer {
     }
 }
 
-
-
-
-
-function nonRootNonSpacingSelector(ctx: StylableTransformer, meta: StylableMeta, scopeSelectorNode: SelectorAstNode) {
-    let sliceCount = 0;
-    const t = scopeSelectorNode.nodes[0];
-    if (t && t.type === 'class' && t.name === ctx.scope(meta.root, meta.namespace)) {
-        sliceCount++;
-        const t = scopeSelectorNode.nodes[1];
-        if (t.type === 'spacing') {
-            sliceCount++;
-        }
-    }
-    
-    scopeSelectorNode.nodes = scopeSelectorNode.nodes.slice(sliceCount);
-    if (scopeSelectorNode.before) {
-        scopeSelectorNode.before = scopeSelectorNode.before!.replace(/^\s+/, '');
-    }    
-    if (scopeSelectorNode.nodes[0].before) {
-        scopeSelectorNode.nodes[0].before = scopeSelectorNode.nodes[0].before!.replace(/^\s+/, '');
-    }
-    return scopeSelectorNode
-}
