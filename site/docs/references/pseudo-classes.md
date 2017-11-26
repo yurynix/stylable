@@ -38,6 +38,77 @@ To define custom pseudo-classes, or states, for a simple selector, you tell **St
 .Example1__root[data-Example1-loading][data-Example1-toggled] { color: blue; }
 ```
 
+
+
+## Future: custom pseudo-classes with parameters
+
+in some use cases its usefull to define custom states the use one or more parameter to indicate which nodes to activate on. 
+
+for example a cell in a grid can be marked using column and row pseudo classes
+
+```css
+/* example1.st.css */
+.token{
+    -st-states: column(number), 
+                row(number), 
+                loaded(percentage), 
+                tag(tag), 
+                size( "small | large")
+}
+
+.token:column(1):row(1){
+    color:red;
+}
+
+.token:loading(">0.5"){
+    color:red;
+}
+
+
+.token:tag(food){
+    color:red;
+}
+
+
+.token:size(small){
+    color:red;
+}
+
+```
+
+```css
+/* CSS output*/
+.Example1__root[data-Example1-column1][data-Example1-row1] { color: red; }
+
+```
+
+### Types and allowed prefixes
+
+we see a number of parameter types returning and want to support the right dev experience for each
+
+
+* string
+
+    allowed prefixes
+    *   ~ - match whole words
+    *   ^ - match start
+    *   $ - match end
+    *   \* - match include
+* number 
+    * only exact matches are supported
+* boolean 
+    * only exact matches are supported
+* enuum 
+    * only exact matches are supported
+* percentage
+    allowed prefixes
+    *   \> - greater then
+    *   \< - lesser then
+
+
+
+
+
 > **Note**    
 > You can also override the behavior of native pseudo-classes. This can enable you to write [polyfills](https://remysharp.com/2010/10/08/what-is-a-polyfill) for forthcoming CSS pseudo-classes to ensure that when you define a name for a custom pseudo-class, if there are clashes with a new CSS pseudo-class in the future, your app's behavior does not change. We don't recommend you to override an existing CSS pseudo-class unless you want to drive your teammates insane.
 
