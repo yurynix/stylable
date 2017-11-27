@@ -56,8 +56,8 @@ for example the following CSS code :
 }
 
 .myClass{
-    color: lighten(0.3,#ff0000);
-    background-color: fmt(0.8,#ff0000)
+    color: lighten(30,#ff0000);
+    background-color: fmt(80,#ff0000)
 }
 
 ```
@@ -69,7 +69,7 @@ and the following JS code can be used together:
 import {darken, lighten as polishedLighten} from 'polished';
 /**
 * Lighten - lightens a color by a percentage.
-* @param {stylable.percentage} [amount=0.5] - How much to lighten.
+* @param {stylable.percentage} [amount=50] - How much to lighten.
 * @param {stylable.color} color - The color to lighten
 * @returns {stylable.color}
 */
@@ -79,7 +79,7 @@ export function lighten(amount,color){
 
 /**
 * Darken - darkens a color by a percentage.
-* @param {stylable.percentage} [amount=0.5] - How much to darken.
+* @param {stylable.percentage} [amount=50] - How much to darken.
 * @param {stylable.color} color - The color to darken
 * @returns {stylable.color}
 */
