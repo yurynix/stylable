@@ -47,7 +47,7 @@ in some use cases its usefull to define custom states the use one or more parame
 for example a cell in a grid can be marked using column and row pseudo classes
 
 ```css
-/* example1.st.css */
+/* stateWithNumberParam.st.css */
 .token{
     -st-states: column(number), 
                 row(number), 
@@ -84,30 +84,159 @@ for example a cell in a grid can be marked using column and row pseudo classes
 
 ### Types and allowed prefixes
 
-we see a number of parameter types returning and want to support the right dev experience for each
+Stylable supports a number of parameter types for pseudo-classes:
+
+
+| Type | Allowed validations | Allowed prefixes | definition with no validations | definition with validations |
+|----|----|----|----|----|
+| String | minLength, maxLength | 
 
 
 * string
-
+    * allowed input validations
+        * minLength
+        * maxLength
     allowed prefixes
     *   ~ - match whole words
     *   ^ - match start
     *   $ - match end
     *   \* - match include
 * number 
-    * only exact matches are supported
+    allowed input validations:
+    * min
+    * max
+    * multipleOf
+    allowed prefixes
+    *   \> - greater then - future
+    *   \< - lesser then - future
 * boolean 
     * only exact matches are supported
-* enuum 
+* tag - whole word matches
+* enum
+
+    allowed input validations:
+    * min
+    * max
+    * multipleOf
     * only exact matches are supported
 * percentage
     allowed prefixes
-    *   \> - greater then
-    *   \< - lesser then
+    *   \> - greater then - future
+    *   \< - lesser then - future
+
+
+#### String example
+
+```css
+/* stateWithNumberParam.st.css */
+.token{
+    -st-states: fieldName(string);
+}
+
+/* customize fields with fieldName email */
+.token:fieldName(email){
+    color:lightBlue;
+}
+
+/* customize fields with fieldName that starts with user_ */
+.token:fieldName(^user_){
+    color:blue;
+}
+
+/* customize fields with fieldName that ends with _id */
+.token:fieldName($_id){
+    color:gray;
+}
+
+/* customize fields with fieldName that includes error */
+.token:fieldName(*error){
+    color:red;
+}
+
+
+/* using includes with "not" operator */
+.token:fieldName(!*error){
+    border:1px solid green;
+}
+```
+
+```css
+/* CSS output*/
+.Example1__root[data-Example1-fieldName="email"] { color: lightBlue; }
+.Example1__root[data-Example1-fieldName^="user_"] { color: blue; }
+.Example1__root[data-Example1-fieldName$="_id"] { color: gray; }
+.Example1__root[data-Example1-fieldName*="error"] { color: red; }
+.Example1__root:not([data-Example1-fieldName*="error"]) { color: red; }
+
+```
+
+
+#### Number example
+
+```css
+/* stateWithNumberParam.st.css */
+.token{
+    -st-states: column(number());
+}
+
+/* customize fields with at column 1 */
+.token:column(1){
+    color:lightBlue;
+}
+
+/* customize column greater then 1 ( FUTURE ) */
+.token:column(>1){
+    color:blue;
+}
+
+```
 
 
 
+```css
+/* CSS output*/
+.Example1__root[data-Example1-fieldName="email"] { color: lightBlue; }
+.Example1__root[data-Example1-fieldName="^user_"] { color: blue; }
+.Example1__root[data-Example1-fieldName="$_id"] { color: gray; }
+.Example1__root[data-Example1-fieldName="*error"] { color: red; }
 
+```
+
+```css
+/* stateWithNumberParam.st.css */
+.token{
+    -st-states: column(number), 
+                row(number), 
+                loaded(percentage), 
+                tag(tag), 
+                size( "small | large")
+}
+
+.token:column(1):row(1){
+    color:red;
+}
+
+.token:loading(">0.5"){
+    color:red;
+}
+
+
+.token:tag(food){
+    color:red;
+}
+
+
+.token:size(small){
+    color:red;
+}
+
+```
+
+```css
+/* CSS output*/
+.Example1__root[data-Example1-column1][data-Example1-row1] { color: red; }
+
+```
 
 > **Note**    
 > You can also override the behavior of native pseudo-classes. This can enable you to write [polyfills](https://remysharp.com/2010/10/08/what-is-a-polyfill) for forthcoming CSS pseudo-classes to ensure that when you define a name for a custom pseudo-class, if there are clashes with a new CSS pseudo-class in the future, your app's behavior does not change. We don't recommend you to override an existing CSS pseudo-class unless you want to drive your teammates insane.
