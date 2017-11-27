@@ -50,14 +50,14 @@ For example the following CSS code :
 ```css
 
 :import{
-    -st-from:"../my-formatter.js"
+    -st-from:"../my-formatter.js";
     -st-named:lighten;
     -st-default:fmt;
 }
 
 .myClass{
     color: lighten(30,#ff0000);
-    background-color: fmt(80,#ff0000)
+    background-color: fmt(80,#ff0000);
 }
 
 ```
@@ -99,7 +99,7 @@ Here's an example creating and using an expandOnHover mixin:
 ```css
 
 :import{
-    -st-from:"../my-mixins.js"
+    -st-from:"../my-mixins.js";
     -st-named:expandOnHover;
 }
 
