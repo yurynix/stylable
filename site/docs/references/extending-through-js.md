@@ -7,11 +7,11 @@ but we'd rather most of our JS code executes at build time. leaving a much bette
 we also care about dev experience, so we everyone to be able to extend stylable while keeping completions and type checks.
 
 
-## stylable types
+## Stylable Types
 
-stylable types represent the available types in CSS. they try to follow the spirit of the houdini future spec. 
+Stylable types represent the available types in CSS. They try to follow the spirit of the Houdini future spec. 
 
-available types and validations:
+Available types and validations:
 
 * color
     * allow opacity
@@ -38,24 +38,26 @@ available types and validations:
     * bezierCurves
 
 
-stylable uses JS Docs to infer JS extension signatures
+Stylable uses JSDocs to infer JS extension signatures
 
-## Extending through formaters:
+## Extending through formatters:
 
-formaters are JS methods manipulating parameters to produce a string value.
+Formatters are JS methods manipulating parameters to produce a string value.
 
 
-for example the following CSS code :
+For example the following CSS code :
 
 ```css
 
 :import{
-    -st-from:"../my-formater.js"
+    -st-from:"../my-formatter.js";
     -st-named:lighten;
+    -st-default:fmt;
 }
 
 .myClass{
-    color:lighten(0.3,#ff0000);
+    color: lighten(30,#ff0000);
+    background-color: fmt(80,#ff0000);
 }
 
 ```
@@ -63,11 +65,11 @@ for example the following CSS code :
 and the following JS code can be used together:
 
 ```js
-
-import {lighten as polishedLighten} from 'polished';
+----my-formatter.js----
+import {darken, lighten as polishedLighten} from 'polished';
 /**
 * Lighten - lightens a color by a percentage.
-* @param {stylable.percentage} [amount=0.5] - How much to lighten.
+* @param {stylable.percentage} [amount=50] - How much to lighten.
 * @param {stylable.color} color - The color to lighten
 * @returns {stylable.color}
 */
@@ -75,19 +77,29 @@ export function lighten(amount,color){
     return polishedLighten(amount,color);
 }
 
+/**
+* Darken - darkens a color by a percentage.
+* @param {stylable.percentage} [amount=50] - How much to darken.
+* @param {stylable.color} color - The color to darken
+* @returns {stylable.color}
+*/
+export default function darken(amount,color){
+    return darken(amount,color);
+}
+
 ```
 
 
 ## Extending through mixins:
 
-in many cases its usefull to generate bigger chunks of css through js.
+In many cases its useful to generate bigger chunks of css through js.
 
-heres an example creating and using an expandOnHover mixin:
+Here's an example creating and using an expandOnHover mixin:
 
 ```css
 
 :import{
-    -st-from:"../my-mixins.js"
+    -st-from:"../my-mixins.js";
     -st-named:expandOnHover;
 }
 
@@ -121,4 +133,4 @@ export function expandOnHover(durationMS,increaseBy,animationCurve){
 
 ## TypeScript and Babel
 
-we love typescript and babel and are working to make JS extensions using them possible as soon as we can.
+We love typescript and babel and are working to make JS extensions using them possible as soon as we can.
