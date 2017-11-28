@@ -42,93 +42,52 @@ To define custom pseudo-classes, or states, for a simple selector, you tell **St
 
 ## Future: custom pseudo-classes with parameters
 
-in some use cases its usefull to define custom states the use one or more parameter to indicate which nodes to activate on. 
+in some use cases its useful to define custom states that a parameter to indicate which nodes to activate on. 
 
 for example a cell in a grid can be marked using column and row pseudo classes
 
 ```css
 /* stateWithNumberParam.st.css */
-.token{
+.cell{
     -st-states: column(number), 
-                row(number), 
-                loaded(percentage), 
-                tag(tag), 
-                size( "small | large")
+                row(number) 
 }
 
-.token:column(1):row(1){
+.cell:column(1):row(1){
     color:red;
 }
 
-.token:loading(">0.5"){
-    color:red;
-}
-
-
-.token:tag(food){
-    color:red;
-}
-
-
-.token:size(small){
-    color:red;
-}
 
 ```
 
 ```css
 /* CSS output*/
-.Example1__root[data-Example1-column1][data-Example1-row1] { color: red; }
+.Example1__root[data-Example1-column="1"][data-Example1-row="1"] { color: red; }
 
 ```
 
 ### Types and allowed prefixes
 
-Stylable supports a number of parameter types for pseudo-classes:
+Stylable will support a number of parameter types for pseudo-classes:
 
 
-| Type | Allowed validations | Allowed prefixes | definition with no validations | definition with validations |
+| Type | Allowed validations | Allowed prefixes |
 |----|----|----|----|----|
-| String | minLength, maxLength | 
+| string | minLength <br> maxLength | "~" - match whole words <br> "^" - match start <br> "$" - match end <br> "*" - match include |
+| number | minimum <br> maximum <br> multipleOf <br> | \> - greater then (future) <br> \< - lesser then (future) <br> n+1 - [nth child format](https://developer.mozilla.org/en-US/docs/Web/CSS/:nth-child) (future)  |
+| boolean | - | - |
+| tag  | - | - |
+| enum | options | - |
+| percentage | - | \> - greater then - future <br> \< - lesser then - future |
 
 
-* string
-    * allowed input validations
-        * minLength
-        * maxLength
-    allowed prefixes
-    *   ~ - match whole words
-    *   ^ - match start
-    *   $ - match end
-    *   \* - match include
-* number 
-    allowed input validations:
-    * min
-    * max
-    * multipleOf
-    allowed prefixes
-    *   \> - greater then - future
-    *   \< - lesser then - future
-* boolean 
-    * only exact matches are supported
-* tag - whole word matches
-* enum
 
-    allowed input validations:
-    * min
-    * max
-    * multipleOf
-    * only exact matches are supported
-* percentage
-    allowed prefixes
-    *   \> - greater then - future
-    *   \< - lesser then - future
 
 
 #### String example
 
 ```css
-/* stateWithNumberParam.st.css */
+/* defining state */
 .token{
     -st-states: fieldName(string);
 }
@@ -175,32 +134,72 @@ Stylable supports a number of parameter types for pseudo-classes:
 
 ```css
 /* stateWithNumberParam.st.css */
-.token{
-    -st-states: column(number());
+.cell{
+    -st-states: column(number);
 }
 
 /* customize fields with at column 1 */
-.token:column(1){
+.cell:column(1){
     color:lightBlue;
 }
 
 /* customize column greater then 1 ( FUTURE ) */
-.token:column(>1){
+.cell:column(n+1){
     color:blue;
+}
+
+
+/* customize column greater then 3 ( FUTURE ) */
+.cell:column(>3){
+    background:blue;
+}
+
+/* customize column lesser then 2 ( FUTURE ) */
+.cell:column(<2){
+    background:red;
 }
 
 ```
 
 
-
 ```css
 /* CSS output*/
-.Example1__root[data-Example1-fieldName="email"] { color: lightBlue; }
-.Example1__root[data-Example1-fieldName="^user_"] { color: blue; }
-.Example1__root[data-Example1-fieldName="$_id"] { color: gray; }
-.Example1__root[data-Example1-fieldName="*error"] { color: red; }
+.Example1__root[data-Example1-column="1"] { color: lightBlue; }
+.Example1__root[data-Example1-column$time-line="^a"] { color: blue; }
+.Example1__root[data-Example1-column$time-line="^abc"] { background: blue; }
+.Example1__root[data-Example1-column$n+1="^abc"] { background: blue; }
+.Example1__root:not([data-Example1-column$time-line="*c"]) { background: red; }
 
 ```
+
+```tsx
+
+//render
+<div ...style('cell',{column:i})>
+
+
+
+// runtime
+// [1, 2 ,3]
+function timeLine(keyFrames,value){
+    let res = '';
+    keyFrames.forEach((keyFrame)
+        if(value>=keyFrame)
+        res+=getChar(i)
+    ))
+    return res;
+}
+
+//js module
+
+
+
+```
+
+
+
+#### Boolean example
+
 
 ```css
 /* stateWithNumberParam.st.css */
