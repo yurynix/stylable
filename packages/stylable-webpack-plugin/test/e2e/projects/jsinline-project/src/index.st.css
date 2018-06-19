@@ -1,0 +1,7 @@
+:import {
+    -st-from: './x.st.css';
+    -st-default: X;
+}
+.index {
+    background: red;
+}
