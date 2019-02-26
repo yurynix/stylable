@@ -1,16 +1,12 @@
-const NullDependency = require('webpack/lib/dependencies/NullDependency');
+const Dependency = require('webpack/lib/Dependency');
 const ModuleDependency = require('webpack/lib/dependencies/ModuleDependency');
 
-class StylableExportsDependency extends NullDependency {
+class StylableExportsDependency extends Dependency {
     constructor(exports) {
         super();
         this.exports = exports;
+        this.type = 'stylable exports' 
     }
-
-    get type() {
-        return 'stylable exports';
-    }
-
     getExports() {
         return {
             exports: this.exports
@@ -29,6 +25,7 @@ class StylableImportDependency extends ModuleDependency {
         super(request);
         this.defaultImport = defaultImport;
         this.names = names;
+        this.type = 'stylable import';
     }
 
     getReference() {
@@ -45,18 +42,12 @@ class StylableImportDependency extends ModuleDependency {
         hash.update('stylable ' + (this.module && this.module.hash));
     }
 
-    get type() {
-        return 'stylable import';
-    }
 }
 
 class StylableAssetDependency extends ModuleDependency {
     constructor(request) {
         super(request);
-    }
-
-    get type() {
-        return 'stylable asset import';
+        this.type = 'stylable asset import'
     }
 }
 

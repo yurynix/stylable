@@ -34,7 +34,7 @@ class StylableGenerator {
               )
             : `""`;
 
-        this.reportDiagnostics(meta);
+        reportDiagnostics(meta, this.compilation);
 
         const depth = module.buildInfo.runtimeInfo.depth;
         const id =
@@ -84,21 +84,6 @@ class StylableGenerator {
             false,
             module.buildInfo.optimize.minify
         );
-    }
-    reportDiagnostics(meta) {
-        const transformReports = meta.transformDiagnostics ? meta.transformDiagnostics.reports : [];
-        meta.diagnostics.reports.concat(transformReports).forEach(report => {
-            if (report.node) {
-                this.compilation.warnings.push(
-                    report.node
-                        .error(report.message, report.options)
-                        .toString()
-                        .replace('CssSyntaxError', 'Stylable')
-                );
-            } else {
-                this.compilation.warnings.push(report.message);
-            }
-        });
     }
     createModuleSource(module, imports, createMethod, args) {
         return new OriginalSource(
@@ -159,3 +144,19 @@ class StylableGenerator {
 }
 
 module.exports = StylableGenerator;
+
+function reportDiagnostics(meta, compilation) {
+    const transformReports = meta.transformDiagnostics ? meta.transformDiagnostics.reports : [];
+    meta.diagnostics.reports.concat(transformReports).forEach(report => {
+        if (report.node) {
+            compilation.warnings.push(
+                report.node
+                    .error(report.message, report.options)
+                    .toString()
+                    .replace('CssSyntaxError', 'Stylable')
+            );
+        } else {
+            compilation.warnings.push(report.message);
+        }
+    });
+}

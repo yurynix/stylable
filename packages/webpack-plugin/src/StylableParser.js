@@ -1,4 +1,5 @@
 const { isLoadedByLoaders } = require('./isLoadedByLoaders');
+const { STYLABLE } = require('./StyleableSymbols');
 const path = require('path');
 const CommonJsRequireDependency = require('webpack/lib/dependencies/CommonJsRequireDependency');
 const RequireHeaderDependency = require('webpack/lib/dependencies/RequireHeaderDependency');
@@ -12,15 +13,14 @@ const { isAsset, makeAbsolute } = require('@stylable/core');
 const stylableExtension = /\.st\.css$/;
 
 class StylableParser {
-    constructor(stylable, compilation, useWeakDeps) {
-        this.stylable = stylable;
-        this.compilation = compilation;
-        this.useWeakDeps = useWeakDeps;
+    constructor(options) {
+        this.options = options;
     }
     parse(source, state) {
+        const compilation = state.compilation;
         if (
             isLoadedByLoaders(state.module, () => {
-                this.compilation.warnings.push(
+                compilation.warnings.push(
                     `Loading a Stylable stylesheet via webpack loaders is not supported and may cause runtime errors.\n"${
                         state.module.rawRequest
                     }" in "${state.module.issuer.resource}"`
@@ -29,7 +29,8 @@ class StylableParser {
         ) {
             return state;
         }
-        const meta = this.stylable.process(state.module.resource);
+        const stylable = compilation[STYLABLE];
+        const meta = stylable.process(state.module.resource);
         state.module.buildInfo.stylableMeta = meta;
         // state.module.buildMeta.exportsType = "namespace";
         meta.urls
@@ -37,7 +38,7 @@ class StylableParser {
             .forEach(asset => {
                 const absPath = makeAbsolute(
                     asset,
-                    this.compilation.options.context,
+                    compilation.options.context,
                     path.dirname(state.module.resource)
                 );
                 state.module.buildInfo.fileDependencies.add(absPath);
@@ -53,7 +54,7 @@ class StylableParser {
                     defaultImport: stylableImport.defaultExport,
                     names: []
                 };
-                const dep = this.useWeakDeps
+                const dep = this.options.useWeakDeps
                     ? StylableImportDependency.createWeak(
                           stylableImport.fromRelative,
                           state.module,
@@ -61,25 +62,28 @@ class StylableParser {
                       )
                     : new StylableImportDependency(stylableImport.fromRelative, importRef);
                 state.module.addDependency(dep);
-                this.addChildDeps(stylableImport);
+                try {
+                    this.addChildDeps(
+                        stylable,
+                        stylableImport,
+                        state.module.buildInfo.fileDependencies
+                    );
+                } catch (e) {}
             }
             //TODO: handle js dependencies?
         });
 
         return state;
     }
-    addChildDeps(stylableImport) {
-        try {
-            this.stylable.process(stylableImport.from).imports.forEach(childImport => {
-                const fileDependencies = state.module.buildInfo.fileDependencies;
-                if (childImport.fromRelative.match(stylableExtension)) {
-                    if (!fileDependencies.has(childImport.from)) {
-                        fileDependencies.add(childImport.from);
-                        this.addChildDeps(childImport, this.stylable);
-                    }
+    addChildDeps(stylable, stylableImport, fileDependencies) {
+        stylable.process(stylableImport.from).imports.forEach(childImport => {
+            if (childImport.fromRelative.match(stylableExtension)) {
+                if (!fileDependencies.has(childImport.from)) {
+                    fileDependencies.add(childImport.from);
+                    this.addChildDeps(stylable, childImport, fileDependencies);
                 }
-            });
-        } catch (e) {}
+            }
+        });
     }
 }
 

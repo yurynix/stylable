@@ -22,6 +22,7 @@ const {
 } = require('./StyleableAutoInitDependency');
 const MultiModule = require('webpack/lib/MultiModule');
 const { RUNTIME_SOURCE, WEBPACK_STYLABLE } = require('./runtime-dependencies');
+const { STYLABLE } = require('./StyleableSymbols');
 
 class StylableWebpackPlugin {
     constructor(options = {}) {
@@ -290,16 +291,15 @@ class StylableWebpackPlugin {
         compiler.hooks.compilation.tap(
             StylableWebpackPlugin.name,
             (compilation, { normalModuleFactory }) => {
+                compilation[STYLABLE] = this.stylable
                 compilation.dependencyFactories.set(StylableImportDependency, normalModuleFactory);
                 compilation.dependencyFactories.set(StylableAssetDependency, normalModuleFactory);
                 normalModuleFactory.hooks.createParser
                     .for('stylable')
                     .tap(StylableWebpackPlugin.name, () => {
-                        return new StylableParser(
-                            this.stylable,
-                            compilation,
-                            this.options.useWeakDeps
-                        );
+                        return new StylableParser({
+                            useWeakDeps: this.options.useWeakDeps
+                        });
                     });
                 normalModuleFactory.hooks.createGenerator
                     .for('stylable')
