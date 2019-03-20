@@ -465,6 +465,43 @@ export class StylableTransformer {
         };
 
     }
+    public scopeSelector2(
+        originMeta: StylableMeta,
+        selector: string,
+        metaExports?: Pojo<string>,
+        calcPaths = false,
+        rule?: postcss.Rule): ScopedSelectorResults {
+        const selectorAst = parseSelector(selector);
+
+        const elements = selectorAst.nodes.map(selectorNode => {
+
+            traverseNode(selectorNode, node => {
+                const { name, type } = node;
+                if (calcPaths && (type === 'class' || type === 'element' || type === 'pseudo-element')) {
+                }
+                if (type === 'selector' || type === 'spacing' || type === 'operator') {
+                } else if (type === 'class') {
+                } else if (type === 'element') {
+                } else if (type === 'pseudo-element') {
+                } else if (type === 'pseudo-class') {
+                } else if (type === 'nested-pseudo-class') {
+                } else if (type === 'invalid' && node.value === '&' && current.parent) {
+                }
+                /* do nothing */
+                return undefined;
+            });
+        });
+        // this.addAdditionalSelectors(addedSelectors, selectorAst);
+
+        return {
+            current,
+            symbol,
+            selectorAst,
+            elements,
+            selector: stringifySelector(selectorAst)
+        };
+
+    }
     public addAdditionalSelectors(addedSelectors: AdditionalSelector[], selectorAst: SelectorAstNode) {
         addedSelectors.forEach(s => {
             const clone = cloneDeep(s.selectorNode);
