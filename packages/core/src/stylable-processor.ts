@@ -677,7 +677,7 @@ export class StylableProcessor {
                         importObj.from = importPath;
                     } else {
                         importObj.fromRelative = importPath;
-                        importObj.from = path.resolve(path.dirname(this.meta.source), importPath);
+                        importObj.from = path.join(path.dirname(this.meta.source), importPath);
                     }
                     fromExists = true;
                     break;

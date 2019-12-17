@@ -1,6 +1,5 @@
 import { flatMatch, processSource } from '@stylable/core-test-kit';
 import * as chai from 'chai';
-import { resolve } from 'path';
 import { ImportSymbol, processNamespace, processorWarnings } from '../src/stylable-processor';
 
 const expect = chai.expect;
@@ -35,7 +34,7 @@ describe('Stylable postcss process', () => {
     });
 
     it('collect namespace', () => {
-        const from = resolve('/path/to/style.css');
+        const from = '/path/to/style.css';
         const result = processSource(
             `
             @namespace "name";
@@ -48,7 +47,7 @@ describe('Stylable postcss process', () => {
     });
 
     it('resolve namespace hook', () => {
-        const from = resolve('/path/to/style.css');
+        const from = '/path/to/style.css';
         const result = processSource(
             `
             @namespace "name";
@@ -61,7 +60,7 @@ describe('Stylable postcss process', () => {
     });
 
     it('use filename as default namespace prefix', () => {
-        const from = resolve('/path/to/style.css');
+        const from = '/path/to/style.css';
 
         const result = processSource(
             `
